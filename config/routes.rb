@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   root 'top#index'
 
+  get 'google' => 'top#index'
+  get 'yahoo' => 'top#yahoo'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -23,7 +26,7 @@ Rails.application.routes.draw do
   #       post 'toggle'
   #     end
   #
-  #     collection do
+  #     collection doget 'yahoo' => 'top#yahoo'
   #       get 'sold'
   #     end
   #   end
