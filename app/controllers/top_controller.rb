@@ -58,14 +58,13 @@ class TopController < ApplicationController
                 meta_info.keywords = link.css('//meta[name$=keywords]/@content').to_s
               end
               #h1
-              page.search("h1").each do |t,i|
+              link.css("h1").each_with_index do |t,i|
                 if i == 0
-                  meta_info.h1 << t.text
+                  meta_info.h1 = t.text
                 else
                   meta_info.h1 << ",,," + t.text
                 end
               end
-
               meta_info.save
             end
           page = page.link_with(:text => "次へ").click
@@ -90,6 +89,8 @@ class TopController < ApplicationController
 
           while true
                   elements = page.search('.hd h3 a')
+
+
                   elements.each do |ele|
                       meta_info = MetaInfo.new
                       meta_info.search_word = keyword
@@ -115,18 +116,46 @@ class TopController < ApplicationController
                       end
 
                       #h1
-                      page.search("h1").each do |t,i|
+                      link.css("h1").each_with_index do |t,i|
                         if i == 0
-                          meta_info.h1 << t.text
+                          meta_info.h1 = t.text
                         else
                           meta_info.h1 << ",,," + t.text
                         end
                       end
-
                       meta_info.save
                   end
-              page = page.link_with(:text => "次へ>").href
-              page = agent.get(page)
+
+#next_pageがない場合、10回同じurlをリロードしてなければbreak、あれば続ける
+#next_pageを読み込んだ場合、うまく表示されない場合は同じurlを再度10回リロード
+              unless page.link_with(:text => "次へ>").present?
+                binding.pry
+                i = 0
+                info = MetaInfo.select("link_address").pluck(:link_address)
+                while i <= 10 do
+                  page = agent.get(page.uri.to_s)
+                    if  page.link_with(:text => "次へ>").present?
+                      next_page = page.link_with(:text => "次へ>").href
+                      test = agent.get(next_page)
+                      href = test.search('.hd h3 a')[0].attribute("href").value
+                      while  info.include?(href) do
+                        c = 0
+                        c += 1
+                        test = agent.get(next_page)
+                        href = test.search('.hd h3 a')[0].attribute("href").value
+                        if c >= 10
+                          break
+                        end
+                      end
+                      page = test
+                    end
+                  i += 1
+                end
+              else
+                next_page = page.link_with(:text => "次へ>").href
+                page = agent.get(next_page)
+              end
+
           end
 
 #      rescue
