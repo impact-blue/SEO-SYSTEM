@@ -5,8 +5,8 @@ class CreateMetaInfos < ActiveRecord::Migration
       t.string :link_address
       t.string :link_text
       t.string :title
-      t.string :discription
-      t.string :keyword
+      t.string :description
+      t.string :keywords
 
       t.timestamps null: false
     end

@@ -18,8 +18,8 @@ ActiveRecord::Schema.define(version: 20160325050415) do
     t.string   "link_address", limit: 255
     t.string   "link_text",    limit: 255
     t.string   "title",        limit: 255
-    t.string   "discription",  limit: 255
-    t.string   "keyword",      limit: 255
+    t.string   "description",  limit: 255
+    t.string   "keywords",     limit: 255
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
   end

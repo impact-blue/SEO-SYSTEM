@@ -25,6 +25,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'roo'
 gem 'mechanize'
+gem 'nokogiri'
 
 
 # Use ActiveModel has_secure_password

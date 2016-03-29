@@ -192,6 +192,7 @@ DEPENDENCIES
   jquery-rails
   mechanize
   mysql2 (>= 0.3.13, < 0.5)
+  nokogiri
   pry-byebug
   pry-rails
   rails (= 4.2.5)
