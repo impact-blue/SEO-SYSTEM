@@ -3,6 +3,7 @@ require "open-uri"
 class TopController < ApplicationController
 
   def index
+    @search_word = MetaInfo.uniq.pluck(:search_word)
   end
 
   def test
@@ -75,7 +76,6 @@ class TopController < ApplicationController
 
 #途中から次へがなくなってしまう
   def yahoo
-    begin
         agent = Mechanize.new
         agent.user_agent_alias = 'Windows Mozilla'
         # Mechanizeは便利なUAのエイリアスがあるので、その中から設定が簡単です。
@@ -91,6 +91,7 @@ class TopController < ApplicationController
                   elements = page.search('.hd h3 a')
                   elements.each do |ele|
                       meta_info = MetaInfo.new
+                      meta_info.search_word = keyword
                       #link_address
                       meta_info.link_address = ele.attribute("href").value
                       #link_text
@@ -116,7 +117,6 @@ class TopController < ApplicationController
               page = agent.get(page)
           end
       rescue
-        redirect_to 'index'
-      end
+        redirect_to root_path
   end
 end

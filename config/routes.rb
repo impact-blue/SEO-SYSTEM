@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   get 'google' => 'top#index'
   get 'yahoo' => 'top#yahoo'
 
+  match '*path' =>  'application#error404',via: :all
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
