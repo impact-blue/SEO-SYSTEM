@@ -100,6 +100,10 @@ class TopController < ApplicationController
                       #link_text
                       meta_info.link_text = ele.inner_text
                       link = Nokogiri.HTML(open(meta_info.link_address))
+                      if OpenURI::HTTPError?
+                        rescue OpenURI::HTTPError => e
+                        end
+                      end
                       #title
                       meta_info.title = link.title
                       #description
@@ -128,8 +132,9 @@ class TopController < ApplicationController
 
 #next_pageがない場合、10回同じurlをリロードしてなければbreak、あれば続ける
 #next_pageを読み込んだ場合、うまく表示されない場合は同じurlを再度10回リロード
+#この場合だと、検索結果2件の時とかまずい。10個目でやるべき
               unless page.link_with(:text => "次へ>").present?
-                binding.pry
+
                 i = 0
                 info = MetaInfo.select("link_address").pluck(:link_address)
                 while i <= 10 do
@@ -138,17 +143,37 @@ class TopController < ApplicationController
                       next_page = page.link_with(:text => "次へ>").href
                       test = agent.get(next_page)
                       href = test.search('.hd h3 a')[0].attribute("href").value
-                      while  info.include?(href) do
-                        c = 0
+
+
+                      c = 0
+                      while  true
+                        if test.search('.hd h3 a')[9].attribute("href").value.present?
+                          break
+                        end
                         c += 1
+
                         test = agent.get(next_page)
                         href = test.search('.hd h3 a')[0].attribute("href").value
+
+                        if info.include?(href)
+                          test = agent.get(next_page)
+                          href = test.search('.hd h3 a')[0].attribute("href").value
+                        else
+                          break
+                        end
+
                         if c >= 10
                           break
                         end
                       end
                       page = test
                     end
+
+                    if test.search('.hd h3 a')[9].attribute("href").value.present?
+                      page = test
+                          break
+                    end
+
                   i += 1
                 end
               else
