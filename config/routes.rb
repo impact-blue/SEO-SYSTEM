@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   root 'top#index'
-
+  get 'test' =>  'top#test'
   get 'google' => 'top#index'
   get 'yahoo' => 'top#yahoo'
 
