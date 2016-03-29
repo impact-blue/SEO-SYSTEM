@@ -1,27 +1,29 @@
-<h1>メタ情報抽出</h1>
-  <p>＊検索には時間がかかります。</p>
-  <p>＊3分でタイムアウトになります。</p>
+<div class="contents">
+  <h1>メタ情報抽出</h1>
+    <p>＊検索には時間がかかります。</p>
+    <p>＊3分でタイムアウトになります。</p>
 
-  <p>テスト</p>
-<%= form_tag test_path, :method => 'get' do %> <%# projects_pathはモデル名で読みかえること %>
-  <p>
-    <%= text_field_tag :search, params[:search] %>
-    <%= submit_tag "Search", :name => nil %>
-  </p>
-<% end %>
+    <p>googleで検索</p>
+    <%= form_tag google_path, :method => 'get' do %>
+      <p>
+        <%= text_field_tag :search, params[:search] %>
+        <%= submit_tag "Search", :name => nil %>
+      </p>
+    <% end %>
 
-<p>yahooで検索</p>
-<%= form_tag yahoo_path, :method => 'get' do %> <%# projects_pathはモデル名で読みかえること %>
-  <p>
-    <%= text_field_tag :search, params[:search] %>
-    <%= submit_tag "Search", :name => nil %>
-  </p>
-<% end %>
-
-  <h2>検索したCSVの出力</h2>
-  <a href="/test.csv">CSV</a>
-
-  検索したワード一覧
-  <% @search_word.each do |w| %>
-  <p><%= w %></p>
+  <p>yahooで検索</p>
+  <%= form_tag yahoo_path, :method => 'get' do %>
+    <p>
+      <%= text_field_tag :search, params[:search] %>
+      <%= submit_tag "Search", :name => nil %>
+    </p>
   <% end %>
+
+    <h2>検索したCSVの出力</h2>
+    <a href="/test.csv">CSV</a>
+
+    検索したワード一覧
+    <% @search_word.each do |w| %>
+      <p><%= w %></p>
+    <% end %>
+</div>
