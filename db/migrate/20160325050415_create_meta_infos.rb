@@ -7,6 +7,8 @@ class CreateMetaInfos < ActiveRecord::Migration
       t.string :title
       t.string :description
       t.string :keywords
+      t.string :h1
+      t.string :search_engin
 
       t.timestamps null: false
     end

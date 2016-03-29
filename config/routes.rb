@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   root 'top#index'
   get 'test' =>  'top#test'
-  get 'google' => 'top#index'
+  get 'google' => 'top#google'
   get 'yahoo' => 'top#yahoo'
 
   match '*path' =>  'application#error404',via: :all

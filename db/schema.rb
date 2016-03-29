@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 20160325050415) do
     t.string   "title",        limit: 255
     t.string   "description",  limit: 255
     t.string   "keywords",     limit: 255
+    t.string   "h1",           limit: 255
+    t.string   "search_engin", limit: 255
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
