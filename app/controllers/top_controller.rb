@@ -8,6 +8,8 @@ class TopController < ApplicationController
 
   def test
     @csv = MetaInfo.where(search_word: params[:word])
+    #特定のカラムがユニークなのだけ抽出
+    @csv = MetaInfo.all.to_a.uniq{|meta_info| meta_info.title}
     #CSVダウンロード
     #<a href="/admin/products.csv/?status=all&page={{data.search_products.current_page}}">CSV</a>
     respond_to do |format|
