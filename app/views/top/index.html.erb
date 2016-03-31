@@ -23,7 +23,7 @@
     <a href="/test.csv">CSV</a>
 
     検索したワード一覧
-    <% @search_word.each do |w| %>
-      <p><%= w %></p>
+    <% @search_word.each do |word| %>
+      <p><%= link_to word, "/test.csv&word=#{word}" %></p>
     <% end %>
 </div>

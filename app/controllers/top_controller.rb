@@ -31,6 +31,8 @@ class TopController < ApplicationController
         # 検索結果を開く
         page = agent.get("http://www.google.co.jp/search?ie=UTF-8&oe=UTF-8&q=#{escaped_keyword}")
 
+
+
         while true
             elements = page.search('.g .r a')
             elements.each do |ele|
@@ -42,35 +44,46 @@ class TopController < ApplicationController
               meta_info.link_address =  ele.attribute("href").value
               #link_text
               meta_info.link_text = ele.inner_text
-              link = Nokogiri.HTML(open(meta_info.link_address))
-              #title
-              meta_info.title = link.title
-              #description
-              if link.css('//meta[name$=description]/@content').to_s.blank?
-                meta_info.description = link.css('//meta[name$=Description]/@content').to_s
-              else
-                meta_info.description = link.css('//meta[name$=description]/@content').to_s
-              end
-              #keywords
-              if link.css('//meta[name$=keywords]/@content').to_s.blank?
-                meta_info.keywords = link.css('//meta[name$=Keywords]/@content').to_s
-              else
-                meta_info.keywords = link.css('//meta[name$=keywords]/@content').to_s
-              end
-              #h1
-              link.css("h1").each_with_index do |t,i|
-                if i == 0
-                  meta_info.h1 = t.text
-                else
-                  meta_info.h1 << ",,," + t.text
+
+              begin
+                  link = Nokogiri.HTML(open(meta_info.link_address))
+                  #title
+                  meta_info.title = link.title
+                  #description
+                  if link.css('//meta[name$=description]/@content').to_s.blank?
+                    meta_info.description = link.css('//meta[name$=Description]/@content').to_s
+                  else
+                    meta_info.description = link.css('//meta[name$=description]/@content').to_s
+                  end
+                  #keywords
+                  if link.css('//meta[name$=keywords]/@content').to_s.blank?
+                    meta_info.keywords = link.css('//meta[name$=Keywords]/@content').to_s
+                  else
+                    meta_info.keywords = link.css('//meta[name$=keywords]/@content').to_s
+                  end
+                  #h1
+                  link.css("h1").each_with_index do |t,i|
+                    if i == 0
+                      meta_info.h1 = t.text
+                    else
+                      meta_info.h1 << "      &&      " + t.text
+                    end
+                  end
+
+                rescue OpenURI::HTTPError => e
+                  if e.message == '404 Not Found'
+                    meta_info.error_page = '404 Not Found'
+                  else
+                    raise e
+                  end
                 end
-              end
+
               meta_info.save
             end
           page = page.link_with(:text => "次へ").click
         end
-     # rescue
-     #   redirect_to root_path
+      rescue
+        redirect_to root_path
   end
 
 
@@ -99,34 +112,39 @@ class TopController < ApplicationController
                       meta_info.link_address = ele.attribute("href").value
                       #link_text
                       meta_info.link_text = ele.inner_text
-                      link = Nokogiri.HTML(open(meta_info.link_address))
-                      if OpenURI::HTTPError?
-                        rescue OpenURI::HTTPError => e
-                        end
-                      end
-                      #title
-                      meta_info.title = link.title
-                      #description
-                      if link.css('//meta[name$=description]/@content').to_s.blank?
-                        meta_info.description = link.css('//meta[name$=Description]/@content').to_s
-                      else
-                        meta_info.description = link.css('//meta[name$=description]/@content').to_s
-                      end
-                      #keywords
-                      if link.css('//meta[name$=keywords]/@content').to_s.blank?
-                        meta_info.keywords = link.css('//meta[name$=Keywords]/@content').to_s
-                      else
-                        meta_info.keywords = link.css('//meta[name$=keywords]/@content').to_s
-                      end
 
-                      #h1
-                      link.css("h1").each_with_index do |t,i|
-                        if i == 0
-                          meta_info.h1 = t.text
-                        else
-                          meta_info.h1 << ",,," + t.text
-                        end
+                      begin
+                          link = Nokogiri.HTML(open(meta_info.link_address))
+                          #title
+                          meta_info.title = link.title
+                          #description
+                          if link.css('//meta[name$=description]/@content').to_s.blank?
+                            meta_info.description = link.css('//meta[name$=Description]/@content').to_s
+                          else
+                            meta_info.description = link.css('//meta[name$=description]/@content').to_s
+                          end
+                          #keywords
+                          if link.css('//meta[name$=keywords]/@content').to_s.blank?
+                            meta_info.keywords = link.css('//meta[name$=Keywords]/@content').to_s
+                          else
+                            meta_info.keywords = link.css('//meta[name$=keywords]/@content').to_s
+                          end
+                          #h1
+                          link.css("h1").each_with_index do |t,i|
+                            if i == 0
+                              meta_info.h1 = t.text
+                            else
+                              meta_info.h1 << ",,," + t.text
+                            end
+                          end
+                      rescue OpenURI::HTTPError => e
+                          if e.message == '404 Not Found'
+                            meta_info.error_page = '404 Not Found'
+                          else
+                            raise e
+                          end
                       end
+                      #
                       meta_info.save
                   end
 
@@ -143,7 +161,6 @@ class TopController < ApplicationController
                       next_page = page.link_with(:text => "次へ>").href
                       test = agent.get(next_page)
                       href = test.search('.hd h3 a')[0].attribute("href").value
-
 
                       c = 0
                       while  true
@@ -180,10 +197,27 @@ class TopController < ApplicationController
                 next_page = page.link_with(:text => "次へ>").href
                 page = agent.get(next_page)
               end
-
           end
-
-#      rescue
-#        redirect_to root_path
   end
+
+private
+
+  def open_uri_error_retry(&nokogiri_process)
+    retry_count = 0
+    begin
+      result = yield
+    rescue OpenURI::HTTPError, Errno::ECONNRESET, Errno::ETIMEDOUT => ex
+      if retry_count <= 5
+        log.error "#{ex.message} retry..."
+        sleep 1
+        retry
+      else
+        log.error ex.message
+      end
+    rescue => ex
+      log.error ex
+    end
+    result
+  end
+
 end
