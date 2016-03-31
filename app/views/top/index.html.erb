@@ -1,29 +1,38 @@
 <div class="contents">
-  <h1>メタ情報抽出</h1>
-    <p>＊検索には時間がかかります。</p>
-    <p>＊30分でタイムアウトになります。</p>
+    <div class="top-wrapper">
+      <div class="heading">
+        <h2>サイト内検索</h2>
+      </div>
+      <div class="search-engins">
+        <div class="engin">
+          <p>google検索</p>
+          <%= form_tag google_path, :method => 'get' do %>
+            <p>
+              <%= text_field_tag :search, params[:search] %>
+              <%= submit_tag "Search", :name => nil %>
+            </p>
+          <% end %>
+        </div>
+        <div class="engin">
+          <p>yahoo検索</p>
+          <%= form_tag yahoo_path, :method => 'get' do %>
+            <p>
+              <%= text_field_tag :search, params[:search] %>
+              <%= submit_tag "Search", :name => nil %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+      <p>＊検索には時間がかかります。</p>
+      <p>＊30分でタイムアウトになります。</p>
+    </div>
+    <div class="footer">
+      <h2>検索したCSVの出力</h2>
+      <a href="/test.csv">CSV</a>
 
-    <p>googleで検索</p>
-    <%= form_tag google_path, :method => 'get' do %>
-      <p>
-        <%= text_field_tag :search, params[:search] %>
-        <%= submit_tag "Search", :name => nil %>
-      </p>
-    <% end %>
-
-  <p>yahooで検索</p>
-  <%= form_tag yahoo_path, :method => 'get' do %>
-    <p>
-      <%= text_field_tag :search, params[:search] %>
-      <%= submit_tag "Search", :name => nil %>
-    </p>
-  <% end %>
-
-    <h2>検索したCSVの出力</h2>
-    <a href="/test.csv">CSV</a>
-
-    検索したワード一覧
-    <% @search_word.each do |word| %>
-      <p><%= link_to word, "/test.csv&word=#{word}" %></p>
-    <% end %>
+      検索したワード一覧
+      <% @search_word.each_with_index do |word,i| %>
+        <p><%= link_to "#{i+1}：#{word}", "/test.csv/?word=#{word}" %></p>
+      <% end %>
+    </div>
 </div>
