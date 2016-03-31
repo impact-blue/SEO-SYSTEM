@@ -17,10 +17,10 @@ ActiveRecord::Schema.define(version: 20160325050415) do
     t.string   "search_word",  limit: 255
     t.text     "link_address", limit: 65535
     t.string   "link_text",    limit: 255
-    t.string   "title",        limit: 255
-    t.string   "description",  limit: 255
-    t.string   "keywords",     limit: 255
-    t.string   "h1",           limit: 255
+    t.text     "title",        limit: 65535
+    t.text     "description",  limit: 65535
+    t.text     "keywords",     limit: 65535
+    t.text     "h1",           limit: 65535
     t.string   "search_engin", limit: 255
     t.string   "error_page",   limit: 255
     t.datetime "created_at",                 null: false

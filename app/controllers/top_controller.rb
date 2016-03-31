@@ -200,6 +200,59 @@ class TopController < ApplicationController
           end
   end
 
+  def search_by_link
+    meta_infos = MetaInfo.where(search_word: nil)
+    meta_infos.each do |meta_info|
+      meta_info.search_word = "なし"
+      meta_info.search_engin = "直接検索"
+
+      begin
+        agent = Mechanize.new
+        agent.user_agent_alias = 'Windows Mozilla'
+        # Mechanizeは便利なUAのエイリアスがあるので、その中から設定が簡単です。
+        ua = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"
+        agent.user_agent = ua
+        agent.open_timeout = 1800
+
+        page = agent.get("#{meta_info.link_address}")
+        #title
+        meta_info.title = page.title
+        #description
+        if page.search('meta[@name="description"]').present?
+          meta_info.description = page.search('meta[@name="description"]').attribute("content").value
+        elsif page.search('meta[@name="Description"]').present?
+          meta_info.description = page.search('meta[@name="Description"]').attribute("content").value
+        end
+        #keywords
+        if page.search('meta[@name="keywords"]').present?
+          meta_info.keywords = page.search('meta[@name="keywords"]').attribute("content").value
+        elsif page.search('meta[@name="Keywords"]').present?
+          meta_info.keywords = page.search('meta[@name="Keywords"]').attribute("content").value
+        end
+        #h1
+        page.search('h1').each_with_index do |t,i|
+          if i == 0
+            meta_info.h1 = t.text
+          else
+            meta_info.h1 << "     &&&     " + t.text
+          end
+        end
+
+      rescue OpenURI::HTTPError => e
+        redirect_to root_path
+      end
+      meta_info.save
+    end
+    redirect_to root_path
+  end
+
+
+  def import
+    MetaInfo.import(params[:file])
+    redirect_to root_path
+  end
+
+
 private
 
   def open_uri_error_retry(&nokogiri_process)

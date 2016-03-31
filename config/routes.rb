@@ -1,9 +1,10 @@
 Rails.application.routes.draw do
   root 'top#index'
-  get 'test' =>  'top#test'
-  get 'google' => 'top#google'
-  get 'yahoo' => 'top#yahoo'
-
+  get 'test'    =>  'top#test'
+  get 'google'  =>  'top#google'
+  get 'yahoo'   =>  'top#yahoo'
+  get 'search_by_link' => 'top#search_by_link'
+  post 'import' =>  'top#import'
 #  match '*path' =>  'application#error404',via: :all
 
   # The priority is based upon order of creation: first created -> highest priority.
