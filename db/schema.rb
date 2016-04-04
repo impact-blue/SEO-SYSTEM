@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160325050415) do
+ActiveRecord::Schema.define(version: 20160404061955) do
 
   create_table "meta_infos", force: :cascade do |t|
     t.string   "search_word",  limit: 255
@@ -23,6 +23,13 @@ ActiveRecord::Schema.define(version: 20160325050415) do
     t.text     "h1",           limit: 65535
     t.string   "search_engin", limit: 255
     t.string   "error_page",   limit: 255
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  create_table "templetes", force: :cascade do |t|
+    t.string   "search_word",  limit: 255
+    t.text     "link_address", limit: 65535
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end

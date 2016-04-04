@@ -44,10 +44,12 @@ header{
 }
 
 .top-wrapper{
-  height: 500px;
   padding-bottom: 80px;
   background-color: #f7f7f7;
   text-align: center;
+  float:left;
+  width:80%;
+  border-right:  1px solid #CCCCCC;
 }
 
 .heading{
@@ -67,12 +69,33 @@ header{
 
 .engin p{
   top:75px;
+  margin:0px;
 }
 
-.engin input{
+.engin input#search{
   border: 1px solid #CCCCCC;
+  width :80%;
   font-size: 18px;
   border-radius:8px;
+  margin-bottom: 8px;
+}
+
+.engin input#search-submit{
+  border: 1px solid #CCCCCC;
+  width :40%;
+  font-size: 18px;
+  border-radius:8px;
+}
+
+.text{
+  float:left;
+  width:19%;
+  background-color: #f7f7f7;
+  padding-top:110px;
+}
+
+.import{
+  clear: both;
 }
 
 .footer p{

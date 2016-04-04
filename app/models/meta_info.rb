@@ -6,7 +6,7 @@ class MetaInfo < ActiveRecord::Base
 
   def self.import(file)
     spreadsheet = open_spreadsheet(file)
-    header = ["id","link_address"]
+    header = ["id","search_word","link_address"]
 
     (2..spreadsheet.last_row).each do |i|
       # {カラム名 => 値, ...} のハッシュを作成する
@@ -33,7 +33,7 @@ class MetaInfo < ActiveRecord::Base
 
   # 更新を許可するカラムを定義
   def self.updatable_attributes
-    ["link_address"]
+    ["search_word","link_address"]
   end
 
 

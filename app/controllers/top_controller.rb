@@ -9,7 +9,9 @@ class TopController < ApplicationController
   def test
     @csv = MetaInfo.where(search_word: params[:word])
     #特定のカラムがユニークなのだけ抽出
-    @csv = MetaInfo.all.to_a.uniq{|meta_info| meta_info.title}
+    if params[:uniq].present?
+      @csv = MetaInfo.all.to_a.uniq{|meta_info| meta_info.title}
+    end
     #CSVダウンロード
     #<a href="/admin/products.csv/?status=all&page={{data.search_products.current_page}}">CSV</a>
     respond_to do |format|
@@ -32,8 +34,6 @@ class TopController < ApplicationController
         escaped_keyword = CGI.escape(keyword)
         # 検索結果を開く
         page = agent.get("http://www.google.co.jp/search?ie=UTF-8&oe=UTF-8&q=#{escaped_keyword}")
-
-
 
         while true
             elements = page.search('.g .r a')
@@ -252,6 +252,21 @@ class TopController < ApplicationController
   def import
     MetaInfo.import(params[:file])
     redirect_to root_path
+  end
+
+  def delete
+    Metainfo.delete.all
+  end
+
+  def downroad_templete
+    @csv = Templete.all
+    #CSVダウンロード
+    respond_to do |format|
+      format.html and return
+      format.csv do
+        send_data render_to_string, filename: "products-#{Time.now.to_date.to_s}.csv", type: :csv
+      end
+    end
   end
 
 

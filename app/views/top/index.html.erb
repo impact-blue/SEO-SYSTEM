@@ -1,15 +1,15 @@
 <div class="contents">
     <div class="top-wrapper">
       <div class="heading">
-        <h2>サイト内検索</h2>
+          <h2>サイト内検索</h2>
       </div>
       <div class="search-engins">
         <div class="engin">
           <h3>google検索</h3>
           <%= form_tag google_path, :method => 'get' do %>
             <p>
-              <%= text_field_tag :search, params[:search] %>
-              <%= submit_tag "Search", :name => nil %>
+              <%= text_field_tag :search, params[:search] %><br>
+              <%= submit_tag "Search", :name => nil ,:id => 'search-submit' %>
             </p>
           <% end %>
         </div>
@@ -18,24 +18,29 @@
           <%= form_tag yahoo_path, :method => 'get' do %>
             <p>
               <%= text_field_tag :search, params[:search] %>
-              <%= submit_tag "Search", :name => nil %>
+              <%= submit_tag "Search", :name => nil ,:id => 'search-submit' %>
             </p>
           <% end %>
         </div>
-        <div class="engin">
-          <%= link_to "インポートしたリンクを検索",search_by_link_path %>
-        </div>
       </div>
-      <p>＊検索には時間がかかります。</p>
-      <p>＊30分でタイムアウトになります。</p>
+    </div>
+    <div class="text">
+        <p>＊検索には時間がかかります。</p>
+        <p>＊30分でタイムアウトになります。</p>
+    </div>
+    <div class="import">
+          <%= link_to "インポートしたリンクを検索",search_by_link_path %>
     </div>
     <div class="footer">
       <h2>検索したCSVの出力</h2>
-      <a href="/test.csv">CSV</a>
+      <a href="/test.csv">全てのCSVをダウンロード</a>
+      <br>
+      <a href="/downroad_templete.csv">テンプレートのダウンロード</a>
 
-      検索したワード一覧
+      <br>検索したワード一覧
       <% @search_word.each_with_index do |word,i| %>
         <p><%= link_to "#{i+1}：#{word}", "/test.csv/?word=#{word}" %></p>
+        <p><%= link_to "#{i+1}：#{word}（Titleがユニークなデータのみダウンロード）", "/test.csv/?word=#{word}&uniq=title" %></p>
       <% end %>
       <%= form_tag import_path, multipart: true do %>
         <%= file_field_tag :file %>
