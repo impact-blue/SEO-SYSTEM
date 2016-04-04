@@ -50,5 +50,5 @@ test:
 production:
   <<: *default
   database: seo_system_production
-  username: seo_system
-  password: <%= ENV['SEO_SYSTEM_DATABASE_PASSWORD'] %>
+#  username: seo_system
+#  password: <%= ENV['SEO_SYSTEM_DATABASE_PASSWORD'] %>

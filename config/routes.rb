@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   get 'search_by_link' => 'top#search_by_link'
   post 'import' =>  'top#import'
   get 'downroad_templete' => 'top#downroad_templete'
+  get 'complete' => 'top#complete'
+  delete  'delete' => 'top#delete'
 #  match '*path' =>  'application#error404',via: :all
 
   # The priority is based upon order of creation: first created -> highest priority.

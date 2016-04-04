@@ -27,6 +27,7 @@
     <div class="text">
         <p>＊検索には時間がかかります。</p>
         <p>＊30分でタイムアウトになります。</p>
+        <p>＊約500件取得できます。</p>
     </div>
     <div class="import">
           <%= link_to "インポートしたリンクを検索",search_by_link_path %>
@@ -46,5 +47,8 @@
         <%= file_field_tag :file %>
         <%= submit_tag "インポート" %>
       <% end %>
+
+
+      <p><%= link_to "データベースをリセットする", delete_path,method: :delete ,data:{confirm: "本当に削除しますか？"} %></p>
     </div>
 </div>
