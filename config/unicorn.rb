@@ -1,14 +1,14 @@
 application = 'SEO-SYSTEM'
 
 worker_processes 4
-timeout 3600
+
 working_directory "/var/www/app/#{application}"
 
 listen "/var/run/unicorn/unicorn_#{application}.sock"   # Unix Domain Socket
 
 pid "/var/run/unicorn/unicorn_#{application}.pid"       # PIDファイル出力先
  
-timeout 60
+timeout 3600
  
 preload_app true
 
