@@ -18,7 +18,7 @@
           <%= form_tag yahoo_path, :method => 'get' do %>
             <p>
               <%= text_field_tag :search, params[:search] %>
-              <%= submit_tag "Search", :name => nil ,:id => 'search-submit' %>
+              <%= submit_tag "Search", :name => nil ,:id => 'search-submit' , data: { disable_with: "検索中です"} %>
             </p>
           <% end %>
         </div>
@@ -30,7 +30,7 @@
         <p>＊約500件取得できます。</p>
     </div>
     <div class="import">
-          <%= link_to "インポートしたリンクを検索",search_by_link_path %>
+          <%= link_to "インポートしたリンクを検索",search_by_link_path, data: { disable_with: "検索中です"}  %>
     </div>
     <div class="footer">
       <h2>検索したCSVの出力</h2>
@@ -45,7 +45,7 @@
       <% end %>
       <%= form_tag import_path, multipart: true do %>
         <%= file_field_tag :file %>
-        <%= submit_tag "インポート" %>
+        <%= submit_tag "インポート", data: { disable_with: "インポート中です"}  %>
       <% end %>
 
 
