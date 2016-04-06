@@ -9,7 +9,7 @@
           <%= form_tag google_path, :method => 'get' do %>
             <p>
               <%= text_field_tag :search, params[:search] %><br>
-              <%= submit_tag "Search", :name => nil ,:id => 'search-submit' %>
+              <%= submit_tag "Search", :name => nil ,:id => 'search-submit', data: { disable_with: "検索中です"}  %>
             </p>
           <% end %>
         </div>
@@ -40,8 +40,8 @@
 
       <br>検索したワード一覧
       <% @search_word.each_with_index do |word,i| %>
-        <p><%= link_to "#{i+1}：#{word}", "/test.csv/?word=#{word}" %></p>
-        <p><%= link_to "#{i+1}：#{word}（Titleがユニークなデータのみダウンロード）", "/test.csv/?word=#{word}&uniq=title" %></p>
+        <p><%= link_to "#{i+1}：#{word}", "/test.csv/?word=#{word}", data: { disable_with: "ダウンロード中です"}  %></p>
+        <p><%= link_to "#{i+1}：#{word}（Titleがユニークなデータのみダウンロード）", "/test.csv/?word=#{word}&uniq=title", data: { disable_with: "ダウンロード中です"}  %></p>
       <% end %>
       <%= form_tag import_path, multipart: true do %>
         <%= file_field_tag :file %>
