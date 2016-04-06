@@ -1,6 +1,7 @@
 application = 'SEO-SYSTEM'
 
-worker_processes 2
+worker_processes 4
+timeout 3600
 working_directory "/var/www/app/#{application}"
 
 listen "/var/run/unicorn/unicorn_#{application}.sock"   # Unix Domain Socket
